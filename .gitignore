@@ -1,0 +1,22 @@
+# course config files
+*.yaml
+
+# gradle
+.gradle/
+build
+
+
+# idea config
+.idea
+
+# Topics
+Topics/
+
+# old stages
+/Simple Python CLI Chat/*
+!/Simple Python CLI Chat/task/
+/Simple Python CLI Chat/task/*
+!/Simple Python CLI Chat/task/simple_cli_AI_chatbot.py
+
+# Ignore Python cache files
+__pycache__/
