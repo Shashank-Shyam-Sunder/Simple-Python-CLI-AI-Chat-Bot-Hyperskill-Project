@@ -20,3 +20,7 @@ Topics/
 
 # Ignore Python cache files
 __pycache__/
+
+# Dependency files
+/requirements.txt
+!/requirements_project.txt
