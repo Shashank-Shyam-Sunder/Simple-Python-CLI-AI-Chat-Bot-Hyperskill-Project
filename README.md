@@ -93,5 +93,35 @@ If you are using the public OpenAI API directly, you may remove the base_url ove
 - requirements.txt is intentionally ignored; requirements_project.txt is the source of truth for dependencies.
 
 
+## Using the public OpenAI API directly (no base_url)
+If you want to call the public OpenAI API directly (e.g., to use official OpenAI models like gpt-4o family today or ChatGPT 5 when available), you can remove the base_url parameter and use only your OpenAI API key.
+
+Example snippet using the OpenAI SDK without a base_url override:
+
+- Python (OpenAI SDK >= 1.0):
+  
+  import openai
+  from dotenv import load_dotenv
+  import os
+  
+  load_dotenv()
+  api_key = os.environ.get("OPENAI_API_KEY")
+  if not api_key:
+      raise KeyError("Missing API Key. Check your .env file.")
+  
+  client = openai.OpenAI(api_key=api_key)
+  
+  resp = client.chat.completions.create(
+      model="gpt-4o-mini",  # or another available model; update as needed
+      messages=[{"role": "user", "content": "Hello"}],
+      temperature=0.8,
+  )
+  print(resp.choices[0].message.content)
+
+Notes:
+- With the public OpenAI API, do not pass base_url unless OpenAI instructs otherwise. The SDK will use the default OpenAI endpoints.
+- Choose the appropriate model for your account access. When ChatGPT 5 (or newer) becomes publicly available via the API, you can set model accordingly.
+- Ensure your OPENAI_API_KEY is valid for the OpenAI API and that your organization/account has access to the selected model.
+
 ## License
-Provide your preferred license here (e.g., MIT). If omitted, assume all rights reserved by default.
+This project is licensed under the MIT License. See the LICENSE file for details.

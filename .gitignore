@@ -27,3 +27,6 @@ __pycache__/
 
 # Ensure README is tracked
 !/README.md
+
+# Ensure LICENSE is tracked
+!/LICENSE
