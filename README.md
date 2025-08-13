@@ -1,10 +1,9 @@
 # Simple Python CLI Chat
 
-A minimal, ready-to-run command‑line chatbot powered by the OpenAI Chat Completions API. This project includes two scripts:
-- simple_cli_AI_chatbot.py — Interactive multi‑turn mode with a simple tool/function and token cost reporting.
-- Simple Python CLI Chat/task/main.py — Single‑turn example that sends one prompt and prints the assistant’s reply and approximate cost.
+A minimal, ready-to-run command‑line chatbot powered by the OpenAI Chat Completions API. This project contains one main script:
+- simple_cli_AI_chatbot.py — Interactive multi‑turn chatbot with function calling capability and token cost reporting.
 
-The scripts use the OpenAI Python SDK, load your API key from a local .env file, and (in this template) talk to a proxy base URL provided for the course environment.
+The script uses the OpenAI Python SDK, loads your API key from a local .env file, and by default connects to a proxy base URL provided for the course environment (but can be configured to use OpenAI directly).
 
 
 ## Features
@@ -12,7 +11,7 @@ The scripts use the OpenAI Python SDK, load your API key from a local .env file,
 - Uses OpenAI Chat Completions with model gpt-4o-mini.
 - Interactive loop (simple_cli_AI_chatbot.py) for continuous chatting.
 - Demonstrates tool (function calling) schema with an example end_conversation function.
-- Prints an estimated token cost per request (based on sample pricing constants in the scripts).
+- Prints an estimated token cost per request (based on sample pricing constants in the script).
 
 
 ## Prerequisites
@@ -38,52 +37,39 @@ Note: requirements.txt is intentionally ignored in this repository; use requirem
 Create a .env file at the project root (or where you run the script) with:
 OPENAI_API_KEY=your_api_key_here
 
-The scripts call load_dotenv() to read this variable.
+The script calls load_dotenv() to read this variable.
 
 
 ## Usage
-Project root directory layout (relevant parts):
-- Simple Python CLI Chat/task/simple_cli_AI_chatbot.py
-- Simple Python CLI Chat/task/main.py
+To run the chatbot, execute the following command (ensure OPENAI_API_KEY is set):
 
-You can run either script. Both require OPENAI_API_KEY to be set.
+python "Simple Python CLI Chat\Simple Python CLI Chat\task\simple_cli_AI_chatbot.py"
 
-1) Interactive multi‑turn chat (recommended for demo):
-   python "Simple Python CLI Chat\Simple Python CLI Chat\task\simple_cli_AI_chatbot.py"
+What it does:
+- Prompts you for input in a continuous interactive loop.
+- Sends your message to the model gpt-4o-mini using the configured base URL.
+- Prints the assistant response.
+- Shows an estimated cost using this pricing table in USD per 1K tokens: input $0.01, output $0.03.
+- Includes a tool schema for a function named end_conversation. When the model triggers a tool call, the script prints details and exits the loop.
 
-   What it does:
-   - Prompts you for input in a loop.
-   - Sends your message to the model gpt-4o-mini using the configured base URL.
-   - Prints the assistant response.
-   - Shows an estimated cost using this pricing table in USD per 1K tokens: input $0.01, output $0.03.
-   - Includes a tool schema for a function named end_conversation. When the model triggers a tool call, the script prints details and exits the loop.
-
-   Tip: You can type End Conversation to hint the assistant to end the dialogue; the sample function schema advertises this capability. Whether it’s invoked depends on the model/tool behavior.
-
-2) Single‑turn example (one prompt):
-   python "Simple Python CLI Chat\Simple Python CLI Chat\task\main.py"
-
-   What it does:
-   - Asks for a single prompt via input().
-   - Sends the prompt to the API and prints the response.
-   - Prints the estimated cost for that single call.
+Tip: You can type "End Conversation" to hint the assistant to end the dialogue; the sample function schema advertises this capability. Whether it's invoked depends on the model/tool behavior.
 
 
 ## Configuration
 - Model: gpt-4o-mini
-- Temperature: 0.8 (both scripts)
-- Base URL: https://litellm.aks-hs-prod.int.hyperskill.org/
+- Temperature: 0.8
+- Base URL: https://litellm.aks-hs-prod.int.hyperskill.org/ (course proxy)
 - Token cost estimation:
   - Input: $0.01 per 1,000 tokens
   - Output: $0.03 per 1,000 tokens
   These are example constants used to estimate cost via the usage fields in the API response. Adjust values as needed.
 
-If you are using the public OpenAI API directly, you may remove the base_url override or change it to the official endpoint per the OpenAI SDK instructions, and ensure pricing reflects the actual model you use.
+**Using OpenAI directly:** If you want to use the public OpenAI API instead of the course proxy, simply remove the `base_url` parameter from the client initialization in the script. This allows you to access official OpenAI models directly with just your API key.
 
 
 ## Troubleshooting
-- Missing API key: The scripts raise KeyError("Missing API Key. Check your .env file.") when OPENAI_API_KEY is not set or visible. Ensure .env is in the working directory and contains the key, or set the environment variable directly.
-- Path on Windows: If running from an IDE or different working directory, ensure the relative path to .env is correct. The scripts include commented examples for manually specifying the .env path.
+- Missing API key: The script raises KeyError("Missing API Key. Check your .env file.") when OPENAI_API_KEY is not set or visible. Ensure .env is in the working directory and contains the key, or set the environment variable directly.
+- Path on Windows: If running from an IDE or different working directory, ensure the relative path to .env is correct. The script includes commented examples for manually specifying the .env path.
 - Network access: Ensure your environment can reach the configured base_url and that your key is valid for it.
 - Dependencies: Make sure you installed from requirements_project.txt.
 
@@ -94,34 +80,48 @@ If you are using the public OpenAI API directly, you may remove the base_url ove
 
 
 ## Using the public OpenAI API directly (no base_url)
-If you want to call the public OpenAI API directly (e.g., to use official OpenAI models like gpt-4o family today or ChatGPT 5 when available), you can remove the base_url parameter and use only your OpenAI API key.
+If you want to use the official OpenAI API instead of the course proxy, you can easily modify the script by removing the `base_url` parameter. This allows you to access OpenAI models directly, including future models like ChatGPT 5 when they become available.
 
-Example snippet using the OpenAI SDK without a base_url override:
+**Quick modification:** In the `simple_cli_AI_chatbot.py` file, change line 56 from:
+```python
+client = openai.OpenAI(api_key=api_key, base_url="https://litellm.aks-hs-prod.int.hyperskill.org/")
+```
+to:
+```python
+client = openai.OpenAI(api_key=api_key)
+```
 
-- Python (OpenAI SDK >= 1.0):
-  
-  import openai
-  from dotenv import load_dotenv
-  import os
-  
-  load_dotenv()
-  api_key = os.environ.get("OPENAI_API_KEY")
-  if not api_key:
-      raise KeyError("Missing API Key. Check your .env file.")
-  
-  client = openai.OpenAI(api_key=api_key)
-  
-  resp = client.chat.completions.create(
-      model="gpt-4o-mini",  # or another available model; update as needed
-      messages=[{"role": "user", "content": "Hello"}],
-      temperature=0.8,
-  )
-  print(resp.choices[0].message.content)
+**Complete example for direct OpenAI usage:**
+```python
+import openai
+from dotenv import load_dotenv
+import os
 
-Notes:
-- With the public OpenAI API, do not pass base_url unless OpenAI instructs otherwise. The SDK will use the default OpenAI endpoints.
-- Choose the appropriate model for your account access. When ChatGPT 5 (or newer) becomes publicly available via the API, you can set model accordingly.
-- Ensure your OPENAI_API_KEY is valid for the OpenAI API and that your organization/account has access to the selected model.
+load_dotenv()
+api_key = os.environ.get("OPENAI_API_KEY")
+if not api_key:
+    raise KeyError("Missing API Key. Check your .env file.")
+
+client = openai.OpenAI(api_key=api_key)  # No base_url needed
+
+resp = client.chat.completions.create(
+    model="gpt-4o-mini",  # or gpt-4o, gpt-4, etc.
+    messages=[{"role": "user", "content": "Hello"}],
+    temperature=0.8,
+)
+print(resp.choices[0].message.content)
+```
+
+**Benefits of using OpenAI directly:**
+- Access to the latest OpenAI models as they're released
+- Direct connection to OpenAI's servers (potentially better performance)
+- Future access to models like ChatGPT 5 when available via the API
+- No dependency on the course proxy infrastructure
+
+**Requirements:**
+- Valid OpenAI API key with sufficient credits
+- Ensure your OPENAI_API_KEY is from your OpenAI account (not the course environment)
+- Choose models available to your OpenAI subscription tier
 
 ## License
 This project is licensed under the MIT License. See the LICENSE file for details.
