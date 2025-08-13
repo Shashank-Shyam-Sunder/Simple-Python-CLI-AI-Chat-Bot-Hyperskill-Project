@@ -24,3 +24,6 @@ __pycache__/
 # Dependency files
 /requirements.txt
 !/requirements_project.txt
+
+# Ensure README is tracked
+!/README.md
