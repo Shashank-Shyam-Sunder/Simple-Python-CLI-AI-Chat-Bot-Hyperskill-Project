@@ -1,7 +1,7 @@
 # Simple Python CLI Chat
 
 A minimal, ready-to-run command‑line chatbot powered by the OpenAI Chat Completions API. This project contains one main script:
-- **File Location:** `Simple Python CLI Chat\Simple Python CLI Chat\task\simple_cli_AI_chatbot.py` — Interactive multi‑turn chatbot with function calling capability and token cost reporting.
+- **File Location:** `Simple Python CLI Chat\task\simple_cli_AI_chatbot.py` — Interactive multi‑turn chatbot with function calling capability and token cost reporting.
 
 The script uses the OpenAI Python SDK, loads your API key from a local .env file, and by default connects to a proxy base URL provided for the course environment (but can be configured to use OpenAI directly).
 
@@ -126,4 +126,4 @@ print(resp.choices[0].message.content)
 - Choose models available to your OpenAI subscription tier
 
 ## License
-This project is licensed under the MIT License. See the LICENSE file for details.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
